@@ -1,16 +1,16 @@
 # puppet_exporter
 
 Simple prometheus exporter. Reads and parse puppet last run file https://puppet.com/docs/puppet/6.18/configuration.html#lastrunfile
-Labels `puppetserver` and `environment` takes from puppet.conf.
+Labels `puppetserver` and `environment` are taken from puppet.conf file.
 
 This is a partial implementation of a ruby exoprter https://github.com/voxpupuli/puppet-prometheus_reporter/
 
 ## Build
 
-Run `go get && go build .`
+`go get && go build .`
 
 ## Run
-`./prometheus_exporter`
+`./puppet_exporter`
 
 ## Metrics example
 ```
