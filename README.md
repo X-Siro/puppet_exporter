@@ -4,6 +4,7 @@ Simple prometheus exporter. Reads and parse puppet last run file https://puppet.
 Labels `puppetserver` and `environment` are taken from puppet.conf file.
 
 This is a partial implementation of a ruby exoprter https://github.com/voxpupuli/puppet-prometheus_reporter/
+There is a grafana dashbord for puppet-prometheus-reporter https://grafana.mgs.local/d/rYeycUNMz/puppet-report?orgId=1
 
 ## Build
 
