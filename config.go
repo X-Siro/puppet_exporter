@@ -13,6 +13,7 @@ import (
 //   Listen           - puppet_exporter listens this host:port
 //   PuppetConf		  - path to puppet.conf file whith agent section
 type Config struct {
+	lastRunReport    string
 	lastRunFile      string
 	lastRunFileCache time.Duration
 	listen           string
@@ -21,14 +22,14 @@ type Config struct {
 
 // ReadArgs from command line flags to config object
 func (c *Config) ReadArgs(args map[string]interface{}) (err error) {
-	c.lastRunFile = defaultLastRunFile
+	c.lastRunReport = defaultLastRunReport
 	c.lastRunFileCache = defaultLastRunFileCache
 	c.listen = defaultListen
 	c.puppetConf = defaultPuppetConf
 
-	// LastRunFile
+	// LastRunReport
 	if args["--lastrunfile"] != nil {
-		c.lastRunFile = args["--lastrunfile"].(string)
+		c.lastRunReport = args["--lastrunreport"].(string)
 	}
 	// LastRunFileCache
 	if args["--lastrunfilecache"] != nil {

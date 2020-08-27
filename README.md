@@ -1,10 +1,9 @@
 # puppet_exporter
 
 Simple prometheus exporter. Reads and parse puppet last run file https://puppet.com/docs/puppet/6.18/configuration.html#lastrunfile
-Labels `puppetserver` and `environment` are taken from puppet.conf file.
 
 This is a partial implementation of a ruby exoprter https://github.com/voxpupuli/puppet-prometheus_reporter/
-There is a grafana dashbord for puppet-prometheus-reporter https://grafana.mgs.local/d/rYeycUNMz/puppet-report?orgId=1
+There is a grafana dashbord for puppet-prometheus-reporter https://grafana.com/grafana/dashboards/700
 
 ## Build
 
@@ -17,57 +16,57 @@ There is a grafana dashbord for puppet-prometheus-reporter https://grafana.mgs.l
 ```
 # HELP puppet_report Unix timestamp of the last puppet run
 # TYPE puppet_report gauge
-puppet_report{environment="production",host="zabbix.mgs.local",puppetserver="puppet.mgs.local"} 1.598452381e+09
+puppet_report{environment="production",host="zabbix.mgs.local",noop="true",status="unchanged",version="6.17.0"} 1.598550305e+12
 # HELP puppet_report_changes Changed resources in the last puppet run
 # TYPE puppet_report_changes gauge
-puppet_report_changes{environment="production",host="zabbix.mgs.local",name="Total",puppetserver="puppet.mgs.local"} 54
+puppet_report_changes{environment="production",host="zabbix.mgs.local",name="Total"} 0
 # HELP puppet_report_events Resource application events
 # TYPE puppet_report_events gauge
-puppet_report_events{environment="production",host="zabbix.mgs.local",name="Failure",puppetserver="puppet.mgs.local"} 0
-puppet_report_events{environment="production",host="zabbix.mgs.local",name="Success",puppetserver="puppet.mgs.local"} 54
-puppet_report_events{environment="production",host="zabbix.mgs.local",name="Total",puppetserver="puppet.mgs.local"} 54
+puppet_report_events{environment="production",host="zabbix.mgs.local",name="Failure"} 0
+puppet_report_events{environment="production",host="zabbix.mgs.local",name="Noop"} 2
+puppet_report_events{environment="production",host="zabbix.mgs.local",name="Success"} 0
+puppet_report_events{environment="production",host="zabbix.mgs.local",name="Total"} 2
 # HELP puppet_report_resources Resources broken down by their state
 # TYPE puppet_report_resources gauge
-puppet_report_resources{environment="production",host="zabbix.mgs.local",name="Changed",puppetserver="puppet.mgs.local"} 48
-puppet_report_resources{environment="production",host="zabbix.mgs.local",name="Corrective change",puppetserver="puppet.mgs.local"} 14
-puppet_report_resources{environment="production",host="zabbix.mgs.local",name="Failed",puppetserver="puppet.mgs.local"} 0
-puppet_report_resources{environment="production",host="zabbix.mgs.local",name="Failed to restart",puppetserver="puppet.mgs.local"} 0
-puppet_report_resources{environment="production",host="zabbix.mgs.local",name="Out of sync",puppetserver="puppet.mgs.local"} 48
-puppet_report_resources{environment="production",host="zabbix.mgs.local",name="Restarted",puppetserver="puppet.mgs.local"} 4
-puppet_report_resources{environment="production",host="zabbix.mgs.local",name="Scheduled",puppetserver="puppet.mgs.local"} 0
-puppet_report_resources{environment="production",host="zabbix.mgs.local",name="Skipped",puppetserver="puppet.mgs.local"} 0
-puppet_report_resources{environment="production",host="zabbix.mgs.local",name="Total",puppetserver="puppet.mgs.local"} 344
+puppet_report_resources{environment="production",host="zabbix.mgs.local",name="Changed"} 0
+puppet_report_resources{environment="production",host="zabbix.mgs.local",name="Corrective change"} 1
+puppet_report_resources{environment="production",host="zabbix.mgs.local",name="Failed"} 0
+puppet_report_resources{environment="production",host="zabbix.mgs.local",name="Failed to restart"} 0
+puppet_report_resources{environment="production",host="zabbix.mgs.local",name="Out of sync"} 1
+puppet_report_resources{environment="production",host="zabbix.mgs.local",name="Restarted"} 0
+puppet_report_resources{environment="production",host="zabbix.mgs.local",name="Scheduled"} 0
+puppet_report_resources{environment="production",host="zabbix.mgs.local",name="Skipped"} 0
+puppet_report_resources{environment="production",host="zabbix.mgs.local",name="Total"} 327
 # HELP puppet_report_time Resource apply times
 # TYPE puppet_report_time gauge
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Anchor",puppetserver="puppet.mgs.local"} 0.00037241999999999993
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Archive",puppetserver="puppet.mgs.local"} 115.389414038
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Augeas",puppetserver="puppet.mgs.local"} 0.111242472
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Catalog application",puppetserver="puppet.mgs.local"} 134.70196412783116
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Concat file",puppetserver="puppet.mgs.local"} 0.0012272290000000003
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Concat fragment",puppetserver="puppet.mgs.local"} 0.005865848
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Config retrieval",puppetserver="puppet.mgs.local"} 2.3082161438651383
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Convert catalog",puppetserver="puppet.mgs.local"} 0.8946966370567679
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Exec",puppetserver="puppet.mgs.local"} 0.22742444999999997
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Fact generation",puppetserver="puppet.mgs.local"} 1.8536186451092362
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="File",puppetserver="puppet.mgs.local"} 0.36711469699999993
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Filebucket",puppetserver="puppet.mgs.local"} 6.1669e-05
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Firewall",puppetserver="puppet.mgs.local"} 0.23260996100000003
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Group",puppetserver="puppet.mgs.local"} 0.037651976999999996
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Kernel parameter",puppetserver="puppet.mgs.local"} 0.007604699
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Last run",puppetserver="puppet.mgs.local"} 1.598452519e+09
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Mysql database",puppetserver="puppet.mgs.local"} 0.000860453
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Mysql datadir",puppetserver="puppet.mgs.local"} 0.000620924
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Mysql grant",puppetserver="puppet.mgs.local"} 0.000714767
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Mysql user",puppetserver="puppet.mgs.local"} 0.000582597
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Node retrieval",puppetserver="puppet.mgs.local"} 0.18439693469554186
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Package",puppetserver="puppet.mgs.local"} 14.290790266
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Plugin sync",puppetserver="puppet.mgs.local"} 0.7674825801514089
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Resources",puppetserver="puppet.mgs.local"} 5.0147e-05
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Schedule",puppetserver="puppet.mgs.local"} 0.000394482
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Service",puppetserver="puppet.mgs.local"} 0.767115533
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Startup time",puppetserver="puppet.mgs.local"} 0.699846496
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Total",puppetserver="puppet.mgs.local"} 141.585556573
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Transaction evaluation",puppetserver="puppet.mgs.local"} 134.675112857949
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="User",puppetserver="puppet.mgs.local"} 0.06356155000000001
-puppet_report_time{environment="production",host="zabbix.mgs.local",name="Yumrepo",puppetserver="puppet.mgs.local"} 0.01740214
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Anchor"} 0.0006055450000000001
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Archive"} 0.000223749
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Augeas"} 0.087641602
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Catalog application"} 2.222302386071533
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Concat file"} 0.001062939
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Concat fragment"} 0.0029326000000000005
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Config retrieval"} 2.9746094150468707
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Convert catalog"} 0.8279071138240397
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Exec"} 0.20353354
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Fact generation"} 1.7725586229935288
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="File"} 0.09264398099999999
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Filebucket"} 6.2406e-05
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Firewall"} 0.00541201
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Group"} 0.001262543
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Kernel parameter"} 0.006980537
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Mysql database"} 0.000434395
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Mysql datadir"} 0.00039102
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Mysql grant"} 0.000649793
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Mysql user"} 0.000426605
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Node retrieval"} 0.1640859697945416
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Package"} 0.22988559000000008
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Plugin sync"} 0.7470447602681816
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Resources"} 8.7718e-05
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Schedule"} 0.000362534
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Service"} 0.21415389
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Startup time"} 0.658697075
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Total"} 9.385631722
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Transaction evaluation"} 2.1736922720447183
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="User"} 0.018924081
+puppet_report_time{environment="production",host="zabbix.mgs.local",name="Yumrepo"} 0.001995337
 ```

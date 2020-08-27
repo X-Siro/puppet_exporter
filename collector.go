@@ -1,8 +1,9 @@
 package main
 
 import (
-	"strings"
-	"unicode"
+	"fmt"
+	"log"
+	"strconv"
 
 	"github.com/prometheus/client_golang/prometheus"
 )
@@ -11,7 +12,7 @@ import (
 type Collector struct {
 	c          int
 	config     Config
-	chResponse chan *PuppetReport
+	chResponse chan *PuppetDetailedReport
 	chRequest  chan interface{}
 }
 
@@ -23,85 +24,68 @@ func (collector *Collector) Describe(ch chan<- *prometheus.Desc) {
 
 // Collect collector method
 func (collector *Collector) Collect(ch chan<- prometheus.Metric) {
-	puppetReport := &PuppetReport{}
+	puppetDetailedReport := &PuppetDetailedReport{}
 	collector.chRequest <- struct{}{}
-	puppetReport = <-collector.chResponse
+	puppetDetailedReport = <-collector.chResponse
+
+	// ch <- prometheus.MustNewConstMetric(
+	// 	prometheus.NewDesc("puppet_report", "Unix timestamp of the last puppet run", []string{"environment", "host", "puppetserver"}, nil),
+	// 	prometheus.GaugeValue,
+	// 	puppetSummaryReport.Version.Config,
+	// 	puppetSummaryReport.PuppetEnvironment,
+	// 	puppetSummaryReport.Host,
+	// 	puppetSummaryReport.PuppetServer,
+	// )
+	fmt.Println("Host: ", puppetDetailedReport.Host)
+	fmt.Println("Time: ", puppetDetailedReport.Time)
+	fmt.Println("ConfigurationVersion: ", puppetDetailedReport.ConfigurationVersion)
+	fmt.Println("TransactionUUID: ", puppetDetailedReport.TransactionUUID)
+	fmt.Println("ReportFormat: ", puppetDetailedReport.ReportFormat)
+	fmt.Println("PuppetVersion: ", puppetDetailedReport.PuppetVersion)
+	fmt.Println("Status: ", puppetDetailedReport.Status)
+	fmt.Println("Noop: ", puppetDetailedReport.Noop)
+	fmt.Println("NoopPending: ", puppetDetailedReport.NoopPending)
+	fmt.Println("Environment: ", puppetDetailedReport.Environment)
+	fmt.Println("CorrectiveChange: ", puppetDetailedReport.CorrectiveChange)
+	fmt.Println("CatalogUUID: ", puppetDetailedReport.CatalogUUID)
+	fmt.Println("CachedCatalogStatus: ", puppetDetailedReport.CachedCatalogStatus)
 
 	ch <- prometheus.MustNewConstMetric(
-		prometheus.NewDesc("puppet_report", "Unix timestamp of the last puppet run", []string{"environment", "host", "puppetserver"}, nil),
+		prometheus.NewDesc("puppet_report", "Unix timestamp of the last puppet run", []string{"environment", "host", "version", "noop", "status"}, nil),
 		prometheus.GaugeValue,
-		puppetReport.Version.Config,
-		puppetReport.PuppetEnvironment,
-		puppetReport.Host,
-		puppetReport.PuppetServer,
+		puppetDetailedReport.ConfigurationVersion*1000, // for dashboard compability
+		puppetDetailedReport.Environment,
+		puppetDetailedReport.Host,
+		puppetDetailedReport.PuppetVersion,
+		fmt.Sprintf("%v", puppetDetailedReport.Noop),
+		puppetDetailedReport.Status,
 	)
 
-	ch <- prometheus.MustNewConstMetric(
-		prometheus.NewDesc("puppet_report_changes", "Changed resources in the last puppet run", []string{"name", "environment", "host", "puppetserver"}, nil),
-		prometheus.GaugeValue,
-		puppetReport.Changes.Total,
-		"Total",
-		puppetReport.PuppetEnvironment,
-		puppetReport.Host,
-		puppetReport.PuppetServer,
-	)
-
-	ch <- prometheus.MustNewConstMetric(
-		prometheus.NewDesc("puppet_report_events", "Resource application events", []string{"name", "environment", "host", "puppetserver"}, nil),
-		prometheus.GaugeValue,
-		puppetReport.Events.Failure,
-		"Failure",
-		puppetReport.PuppetEnvironment,
-		puppetReport.Host,
-		puppetReport.PuppetServer,
-	)
-	ch <- prometheus.MustNewConstMetric(
-		prometheus.NewDesc("puppet_report_events", "Resource application events", []string{"name", "environment", "host", "puppetserver"}, nil),
-		prometheus.GaugeValue,
-		puppetReport.Events.Success,
-		"Success",
-		puppetReport.PuppetEnvironment,
-		puppetReport.Host,
-		puppetReport.PuppetServer,
-	)
-	ch <- prometheus.MustNewConstMetric(
-		prometheus.NewDesc("puppet_report_events", "Resource application events", []string{"name", "environment", "host", "puppetserver"}, nil),
-		prometheus.GaugeValue,
-		puppetReport.Events.Total,
-		"Total",
-		puppetReport.PuppetEnvironment,
-		puppetReport.Host,
-		puppetReport.PuppetServer,
-	)
-
-	for key, value := range puppetReport.Time {
-		ch <- prometheus.MustNewConstMetric(
-			prometheus.NewDesc("puppet_report_time", "Resource apply times", []string{"name", "environment", "host", "puppetserver"}, nil),
-			prometheus.GaugeValue,
-			value,
-			strings.ReplaceAll(upcaseInitial(key), "_", " "),
-			puppetReport.PuppetEnvironment,
-			puppetReport.Host,
-			puppetReport.PuppetServer,
-		)
+	for name, metric := range puppetDetailedReport.Metrics {
+		description := ""
+		switch name {
+		case "resources":
+			description = "Resources broken down by their state"
+		case "time":
+			description = "Resource apply times"
+		case "events":
+			description = "Resource application events"
+		case "changes":
+			description = "Changed resources in the last puppet run"
+		}
+		for _, metricValue := range metric.Values {
+			val, err := strconv.ParseFloat(metricValue[2], 64)
+			if err != nil {
+				log.Fatal(err)
+			}
+			ch <- prometheus.MustNewConstMetric(
+				prometheus.NewDesc("puppet_report_"+name, description, []string{"name", "environment", "host"}, nil),
+				prometheus.GaugeValue,
+				val,
+				metricValue[1],
+				puppetDetailedReport.Environment,
+				puppetDetailedReport.Host,
+			)
+		}
 	}
-
-	for key, value := range puppetReport.Resources {
-		ch <- prometheus.MustNewConstMetric(
-			prometheus.NewDesc("puppet_report_resources", "Resources broken down by their state", []string{"name", "environment", "host", "puppetserver"}, nil),
-			prometheus.GaugeValue,
-			value,
-			strings.ReplaceAll(upcaseInitial(key), "_", " "),
-			puppetReport.PuppetEnvironment,
-			puppetReport.Host,
-			puppetReport.PuppetServer,
-		)
-	}
-}
-
-func upcaseInitial(str string) string {
-	for i, v := range str {
-		return string(unicode.ToUpper(v)) + str[i+1:]
-	}
-	return ""
 }

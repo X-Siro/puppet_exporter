@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	arguments, err := docopt.Parse(usage, nil, true, "v1.0.0", true, false)
+	arguments, err := docopt.Parse(usage, nil, true, "v1.0.1", true, false)
 	if err != nil {
 		fmt.Printf("\nRun for print help screen:\n\t%v --help\n", os.Args[0])
 		os.Exit(1)
@@ -29,7 +29,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	chResponse := make(chan *PuppetReport, 10)
+	chResponse := make(chan *PuppetDetailedReport, 10)
 	chRequest := make(chan interface{}, 10)
 	defer close(chRequest)
 	defer close(chResponse)
