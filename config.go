@@ -17,7 +17,6 @@ type Config struct {
 	lastRunFile      string
 	lastRunFileCache time.Duration
 	listen           string
-	puppetConf       string
 }
 
 // ReadArgs from command line flags to config object
@@ -25,7 +24,6 @@ func (c *Config) ReadArgs(args map[string]interface{}) (err error) {
 	c.lastRunReport = defaultLastRunReport
 	c.lastRunFileCache = defaultLastRunFileCache
 	c.listen = defaultListen
-	c.puppetConf = defaultPuppetConf
 
 	// LastRunReport
 	if args["--lastrunfile"] != nil {
@@ -55,11 +53,6 @@ func (c *Config) ReadArgs(args map[string]interface{}) (err error) {
 		if listen[0] == "" {
 			c.listen = fmt.Sprintf(":%v", listen[1])
 		}
-	}
-
-	// puppetConf
-	if args["--puppetconf"] != nil {
-		c.puppetConf = args["--puppetconf"].(string)
 	}
 
 	return nil
