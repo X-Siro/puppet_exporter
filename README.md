@@ -70,3 +70,4 @@ puppet_report_time{environment="production",host="zabbix.mgs.local",name="Transa
 puppet_report_time{environment="production",host="zabbix.mgs.local",name="User"} 0.018924081
 puppet_report_time{environment="production",host="zabbix.mgs.local",name="Yumrepo"} 0.001995337
 ```
+
