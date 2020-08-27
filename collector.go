@@ -28,28 +28,6 @@ func (collector *Collector) Collect(ch chan<- prometheus.Metric) {
 	collector.chRequest <- struct{}{}
 	puppetDetailedReport = <-collector.chResponse
 
-	// ch <- prometheus.MustNewConstMetric(
-	// 	prometheus.NewDesc("puppet_report", "Unix timestamp of the last puppet run", []string{"environment", "host", "puppetserver"}, nil),
-	// 	prometheus.GaugeValue,
-	// 	puppetSummaryReport.Version.Config,
-	// 	puppetSummaryReport.PuppetEnvironment,
-	// 	puppetSummaryReport.Host,
-	// 	puppetSummaryReport.PuppetServer,
-	// )
-	fmt.Println("Host: ", puppetDetailedReport.Host)
-	fmt.Println("Time: ", puppetDetailedReport.Time)
-	fmt.Println("ConfigurationVersion: ", puppetDetailedReport.ConfigurationVersion)
-	fmt.Println("TransactionUUID: ", puppetDetailedReport.TransactionUUID)
-	fmt.Println("ReportFormat: ", puppetDetailedReport.ReportFormat)
-	fmt.Println("PuppetVersion: ", puppetDetailedReport.PuppetVersion)
-	fmt.Println("Status: ", puppetDetailedReport.Status)
-	fmt.Println("Noop: ", puppetDetailedReport.Noop)
-	fmt.Println("NoopPending: ", puppetDetailedReport.NoopPending)
-	fmt.Println("Environment: ", puppetDetailedReport.Environment)
-	fmt.Println("CorrectiveChange: ", puppetDetailedReport.CorrectiveChange)
-	fmt.Println("CatalogUUID: ", puppetDetailedReport.CatalogUUID)
-	fmt.Println("CachedCatalogStatus: ", puppetDetailedReport.CachedCatalogStatus)
-
 	ch <- prometheus.MustNewConstMetric(
 		prometheus.NewDesc("puppet_report", "Unix timestamp of the last puppet run", []string{"environment", "host", "version", "noop", "status"}, nil),
 		prometheus.GaugeValue,
