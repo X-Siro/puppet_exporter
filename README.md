@@ -1,6 +1,6 @@
 # puppet_exporter
 
-Simple prometheus exporter. Reads and parse puppet last run file https://puppet.com/docs/puppet/6.18/configuration.html#lastrunfile
+Simple prometheus exporter. Reads and parse puppet last run report https://puppet.com/docs/puppet/6.18/configuration.html#lastrunreport
 
 This is a partial implementation of a ruby exoprter https://github.com/voxpupuli/puppet-prometheus_reporter/
 There is a grafana dashbord for puppet-prometheus-reporter https://grafana.com/grafana/dashboards/700
